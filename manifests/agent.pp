@@ -61,8 +61,10 @@ class check_mk::agent (
     require => Package['check_mk-agent','check_mk-agent-logwatch'],
     notify  => Service['xinetd'],
   }
-  service { 'xinetd':
-    ensure => 'running',
-    enable => true,
+  if ! defined(Service['xinetd']) {
+    service { 'xinetd':
+      ensure => 'running',
+      enable => true,
+    }
   }
 }
