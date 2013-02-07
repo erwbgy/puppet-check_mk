@@ -67,5 +67,9 @@ class check_mk::agent (
       enable => true,
     }
   }
+  exec { 'check_mk-refresh-inventory':
+    command  => '/usr/bin/cmk -I',
+    schedule => 'daily',
+  }
   @@check_mk::host { $::fqdn: }
 }
