@@ -67,4 +67,5 @@ class check_mk::agent (
       enable => true,
     }
   }
+  @@check_mk::host { $::fqdn: }
 }
