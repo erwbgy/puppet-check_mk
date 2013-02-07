@@ -15,6 +15,7 @@ class check_mk::config {
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
+    notify => Exec['check_mk-restart'],
   }
   concat::fragment { 'all_hosts-header':
     target  => '/etc/check_mk/main.mk',
