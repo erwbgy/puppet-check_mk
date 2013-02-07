@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Puppet-check mk : Install and configure check_mk agent and Nagios plugin" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Puppet-check mk</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/erwbgy/puppet-check_mk">View on GitHub</a>
+
+          <h1 id="project_title">Puppet-check mk</h1>
+          <h2 id="project_tagline">Install and configure check_mk agent and Nagios plugin</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/erwbgy/puppet-check_mk/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/erwbgy/puppet-check_mk/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>check_mk</h1>
+
+<p>Puppet module for installing and configuring a Nagios server with check_mk and
+check_mk agents.  Agent hostnames are automatically added to the server
+all_hosts configuration using stored configs.</p>
+
+<p>Currently only tested on Redhat-like systems.</p>
+
+<h2>Server</h2>
+
+<ul>
+<li><p>Installs nagios packages from EPEL.</p></li>
+<li><p>Unpacks the check_mk tarball and runs the setup script - this requires
+installing the g++ compiler and related tools so if this is an issue then use
+the OMD distribution instead (which you should probably use anyway for any
+important setup).</p></li>
+<li><p>Populates the all_hosts array in /etc/check_mk/main.mk with hostnames
+exported by check::agent classes on agent hosts</p></li>
+</ul><h3>Example</h3>
+
+<pre><code>class { 'check_mk':
+  version =&gt; '1.2.0p3'
+}
+</code></pre>
+
+<h3>check_mk parameters</h3>
+
+<p><em>version</em>: The version in the check_mk tarball - for example if the tarball is
+'check_mk-1.2.0p3.tar.gz' then the version is '1.2.0p3'. REQUIRED.</p>
+
+<p><em>filestore</em>: The location of the tarball.  Default: 'puppet:///files/check_mk'</p>
+
+<p><em>workspace</em>: The directory to use to store files used during installation.
+Default: '/root/check_mk'</p>
+
+<h2>Agent</h2>
+
+<ul>
+<li><p>Installs the check_mk-agent and check_mk-agent-logwatch RPMs</p></li>
+<li><p>Configures the /etc/xinetd.d/check_mk configuration file</p></li>
+</ul><h3>Example</h3>
+
+<pre><code>class { 'check_mk::agent':
+  version =&gt; '1.2.0p3-1',
+  ip_whitelist =&gt; [ '10.7.96.21', '10.7.96.22' ],
+}
+</code></pre>
+
+<h3>check_mk::agent parameters</h3>
+
+<p><em>version</em>: The version in the check_mk packages - for example if the RPM is
+'check_mk-agent-1.2.0p3-1.noarch.rpm' then the version is '1.2.0p3-1'.
+REQUIRED.</p>
+
+<p><em>filestore</em>: The location of the tarball.  Default: 'puppet:///files/check_mk'</p>
+
+<p><em>ip_whitelist</em>: The list of IP addresses that are allowed to retrieve check_mk
+data. (Note that localhost is always allowed to connect.) By default any IP can
+connect.</p>
+
+<p><em>port</em>: The port the check_mk agent listens on. Default: '6556'</p>
+
+<p><em>server_dir</em>: The directory in which the check_mk_agent executable is located.
+Default: '/usr/bin'</p>
+
+<p><em>use_cache</em>: Whether or not to cache the results - useful with redundant
+monitoring server setups.  Default: 'false'</p>
+
+<p><em>user</em>: The user that the agent runs as. Default: 'root'</p>
+
+<p><em>workspace</em>: The directory to use to store files used during installation.
+Default: '/root/check_mk'</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Puppet-check mk maintained by <a href="https://github.com/erwbgy">erwbgy</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-37513727-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
