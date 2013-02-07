@@ -12,7 +12,7 @@ class check_mk::config {
     notify => Class['check_mk::service'],
   }
   file_line { 'add-guest-users':
-    ensure => present.
+    ensure => present,
     line   => 'guest_users = [ "guest" ]',
     path   => '/etc/check_mk/multisite.mk',
     notify => Class['check_mk::service'],
