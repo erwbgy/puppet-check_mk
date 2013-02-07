@@ -38,7 +38,10 @@ class check_mk::agent (
     ensure   => present,
     provider => 'rpm',
     source   => "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm",
-    require  => File["${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm"],
+    require  => [
+      File["${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm"],
+      Package['check_mk-agent'],
+    ],       
   }
   if $use_cache {
     $server = "${server_dir}/check_mk_caching_agent"
