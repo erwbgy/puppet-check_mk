@@ -11,6 +11,12 @@ class check_mk::config {
     path   => '/etc/nagios/nagios.cfg',
     notify => Class['check_mk::service'],
   }
+  file_line { 'add-guest-users':
+    ensure => present.
+    line   => 'guest_users = [ "guest" ]',
+    path   => '/etc/check_mk/multisite.mk',
+    notify => Class['check_mk::service'],
+  }
   concat { '/etc/check_mk/main.mk':
     owner  => 'root',
     group  => 'root',

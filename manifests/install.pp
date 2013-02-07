@@ -5,11 +5,23 @@ class check_mk::install (
 ) {
   package { 'nagios':
     ensure => present,
-    notify => Exec['set-nagiosadmin-password', 'add-apache-to-nagios-group'],
+    notify => Exec['set-nagiosadmin-password', 'set-guest-password', 'add-apache-to-nagios-group'],
+  }
+  file { '/etc/nagios/passwd':
+    ensure => present,
+    owner  => 'root',
+    group  => 'apache',
+    mode   => '0640',
   }
   exec { 'set-nagiosadmin-password':
-    command     => '/usr/bin/htpasswd -bc /etc/nagios/passwd nagiosadmin letmein',
+    command     => '/usr/bin/htpasswd -b /etc/nagios/passwd nagiosadmin letmein',
     refreshonly => true,
+    require     => File['/etc/nagios/passwd'],
+  }
+  exec { 'set-guest-password':
+    command     => '/usr/bin/htpasswd -b /etc/nagios/passwd guest guest',
+    refreshonly => true,
+    require     => File['/etc/nagios/passwd'],
   }
   exec { 'add-apache-to-nagios-group':
     command     => '/usr/sbin/usermod -a -G nagios apache',
