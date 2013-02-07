@@ -1,6 +1,6 @@
 class check_mk::agent (
   $version,
-  $filestore    = 'puppet://files/check_mk',
+  $filestore    = 'puppet:///files/check_mk',
   $ip_whitelist = undef,
   $port         = '6556',
   $server_dir   = '/usr/bin',
@@ -13,25 +13,32 @@ class check_mk::agent (
       ensure => present,
     }
   }
+  if ! defined(File[$workspace]) {
+    file { $workspace:
+      ensure => directory,
+    }
+  }
   file { "${workspace}/check_mk-agent-${version}.noarch.rpm":
     ensure  => present,
-    content => "${filestore}/check_mk-agent-${version}.noarch.rpm",
+    source  => "${filestore}/check_mk-agent-${version}.noarch.rpm",
     require => Package['xinetd'],
   }
   file { "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm":
     ensure  => present,
-    content => "${filestore}/check_mk-agent-logwatch-${version}.noarch.rpm",
+    source  => "${filestore}/check_mk-agent-logwatch-${version}.noarch.rpm",
     require => Package['xinetd'],
   }
   package { 'check_mk-agent':
-    ensure => present,
-    source => "${workspace}/check_mk-agent-${version}.noarch.rpm",
-    require => File["${workspace}/check_mk-agent-${version}.noarch.rpm"],
+    ensure   => present,
+    provider => 'rpm',
+    source   => "${workspace}/check_mk-agent-${version}.noarch.rpm",
+    require  => File["${workspace}/check_mk-agent-${version}.noarch.rpm"],
   }
   package { 'check_mk-agent-logwatch':
-    ensure  => present,
-    content => "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm",
-    require => File["${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm"],
+    ensure   => present,
+    provider => 'rpm',
+    source   => "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm",
+    require  => File["${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm"],
   }
   if $use_cache {
     $server = "${server_dir}/check_mk_caching_agent"
@@ -50,7 +57,7 @@ class check_mk::agent (
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
-    source  => template('check_mk/agent/check_mk.erb'),
+    content => template('check_mk/agent/check_mk.erb'),
     require => Package['check_mk-agent','check_mk-agent-logwatch'],
     notify  => Service['xinetd'],
   }
