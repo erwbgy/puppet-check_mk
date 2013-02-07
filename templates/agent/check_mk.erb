@@ -32,7 +32,7 @@ service check_mk
 	user           = <%= @user %>
 	server         = <%= @server %>
 <% if @only_from -%>
-	only_from      = <%= @only_from %>
+	only_from      = 127.0.0.1 <%= @only_from %>
 <% end -%>
 	log_on_success =
 	disable        = no
