@@ -27,21 +27,8 @@ class check_mk::config {
     order   => 03,
   }
   Check_mk::Host <<| |>> { notify => Exec['check_mk-restart'] }
-  #file { '/etc/check_mk/main.mk':
-  #  ensure => present,
-  #  content => "all_hosts = [ 'lnxmgt-01.sbetenv.ads' ]",
-  #  notify => Exec['check_mk-restart'],
-  #}
   exec { 'check_mk-restart':
     command     => '/usr/bin/check_mk -O',
     refreshonly => true,
   }
-  # TODO:
-  # /etc/check_mk/main.mk
-  # all_hosts = [
-  #  'lnxmgt-01.sbetenv.ads',
-  #  'lnxmgt-02.sbetenv.ads',
-  # ]
-  # # cmk -I
-  # # check_mk -O
 }
