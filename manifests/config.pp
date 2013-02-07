@@ -15,7 +15,7 @@ class check_mk::config {
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
-    notify => Exec['check_mk-restart'],
+    notify => Exec['check_mk-refresh'],
   }
   concat::fragment { 'all_hosts-header':
     target  => '/etc/check_mk/main.mk',
@@ -27,8 +27,13 @@ class check_mk::config {
     content => "]\n",
     order   => 03,
   }
-  Check_mk::Host <<| |>> { notify => Exec['check_mk-restart'] }
-  exec { 'check_mk-restart':
+  Check_mk::Host <<| |>> { notify => Exec['check_mk-refresh'] }
+  exec { 'check_mk-refresh':
+    command     => '/usr/bin/check_mk -I',
+    refreshonly => true,
+    notify      => Exec['check_mk-reload'],
+  }
+  exec { 'check_mk-reload':
     command     => '/usr/bin/check_mk -O',
     refreshonly => true,
   }
