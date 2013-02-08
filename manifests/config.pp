@@ -72,20 +72,17 @@ class check_mk::config (
   }
   # re-read config if it changes
   exec { 'check_mk-refresh':
-    command     => "${bin_dir}/check_mk -I",
-    user        => $site,
+    command     => "/bin/su -l -c '${bin_dir}/check_mk -I' ${site}",
     refreshonly => true,
     notify      => Exec['check_mk-reload'],
   }
   exec { 'check_mk-reload':
-    command     => "${bin_dir}/check_mk -O",
-    user        => $site,
+    command     => "/bin/su -l -c '${bin_dir}/check_mk -O' ${site}",
     refreshonly => true,
   }
   # re-read inventory at least daily
   exec { 'check_mk-refresh-inventory-daily':
-    command  => "${bin_dir}/cmk -I",
-    user     => $site,
+    command  => "/bin/su -l -c '${bin_dir}/check_mk -O' ${site}",
     schedule => 'daily',
   }
 }
