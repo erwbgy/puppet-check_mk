@@ -62,7 +62,6 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
 * The default username/password is omdadmin/omd. To change this or add additional users log in as the site user and run htpasswd - for example:
 
-    # su - monitoring
     monitoring$ htpasswd -b ~/etc/htpasswd guest guest
 
 * A user called 'guest' is configured as a guest user but is not enabled unless a password is set (as above).
@@ -78,7 +77,7 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
     include check_mk::agent
 
 Installs the check_mk and check_mk_logwatch packages from the system repository
-and configured /etc/xinetd.d/check_mk with no IP whitelist restrictions.
+and configures /etc/xinetd.d/check_mk with no IP whitelist restrictions.
 
 ### Example 2
 
