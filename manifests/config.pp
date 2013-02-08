@@ -73,7 +73,7 @@ class check_mk::config (
     ensure  => "${etc_dir}/check_mk/main.mk.local",
     order   => 99,
   }
-  # re-read config
+  # re-read config if it changes
   exec { 'check_mk-refresh':
     command     => "${bin_dir}/check_mk -I",
     refreshonly => true,
@@ -82,5 +82,10 @@ class check_mk::config (
   exec { 'check_mk-reload':
     command     => "${bin_dir}/check_mk -O",
     refreshonly => true,
+  }
+  # re-read inventory at least daily
+  exec { 'check_mk-refresh-inventory-daily':
+    command  => "${bin_dir}/cmk -I",
+    schedule => 'daily',
   }
 }
