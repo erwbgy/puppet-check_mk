@@ -33,45 +33,88 @@
       <section id="main_content" class="inner">
         <h1>check_mk</h1>
 
-<p>Puppet module for installing and configuring a Nagios server with check_mk and
-check_mk agents.  Agent hostnames are automatically added to the server
-all_hosts configuration using stored configs.</p>
+<p>Puppet module for:</p>
+
+<ul>
+<li><p>Installing and configuring the Open Monitoring Distribution (OMD) which
+includes Nagios, check_mk and lots of other tools</p></li>
+<li><p>Installing and configuring check_mk agents</p></li>
+</ul><p>Agent hostnames are automatically added to the server all_hosts configuration
+using stored configs.</p>
 
 <p>Currently only tested on Redhat-like systems.</p>
 
 <h2>Server</h2>
 
 <ul>
-<li><p>Installs nagios packages from EPEL.</p></li>
-<li><p>Unpacks the check_mk tarball and runs the setup script - this requires
-installing the g++ compiler and related tools so if this is an issue then use
-the OMD distribution instead (which you should probably use anyway for any
-important setup).</p></li>
+<li><p>Installs omd package either using the system repository (eg. yum, apt) or
+from a package file retrieved from the Puppet file store</p></li>
 <li><p>Populates the all_hosts array in /etc/check_mk/main.mk with hostnames
 exported by check::agent classes on agent hosts</p></li>
-</ul><h3>Example</h3>
+</ul><h3>Example 1</h3>
+
+<pre><code>include check_mk
+</code></pre>
+
+<p>Installs the 'monitoring' package from the system repository. The default 'monitoring' site is used.</p>
+
+<h3>Example 2</h3>
 
 <pre><code>class { 'check_mk':
-  version =&gt; '1.2.0p3'
+  filestore =&gt; 'puppet:///files/check_mk',
+  package   =&gt; 'omd-0.56-rh60-29.x86_64.rpm'
 }
 </code></pre>
 
+<p>Installs the specified omd package after retrieving it from the Puppet file store.</p>
+
+<h3>Example 3</h3>
+
+<pre><code>class { 'check_mk':
+  site =&gt; 'acme',
+}
+</code></pre>
+
+<p>Installs the omd package from the system repository.  A site called 'acme' is
+created making the URL http://hostname/acme/check_mk/ running as the 'acme' user.</p>
+
 <h3>check_mk parameters</h3>
 
-<p><em>version</em>: The version in the check_mk tarball - for example if the tarball is
-'check_mk-1.2.0p3.tar.gz' then the version is '1.2.0p3'. REQUIRED.</p>
+<p><em>package</em>: The omd package (rpm or deb) to install. Optional.</p>
 
-<p><em>filestore</em>: The location of the tarball.  Default: 'puppet:///files/check_mk'</p>
+<p><em>filestore</em>: The Puppet file store location where the package can be found (eg. 'puppet:///files/check_mk'). Optional.</p>
 
-<p><em>workspace</em>: The directory to use to store files used during installation.
-Default: '/root/check_mk'</p>
+<p><em>site</em>: The name of the omd site (and the user/group it runs as). Default: 'monitoring'</p>
 
-<h2>Agent</h2>
+<p><em>workspace</em>: The directory to use to store files used during installation.  Default: '/root/check_mk'</p>
+
+<h3>Notes</h3>
 
 <ul>
-<li><p>Installs the check_mk-agent and check_mk-agent-logwatch RPMs</p></li>
+<li><p>A user and group with the same value as the site parameter is created.  By default this is 'monitoring'.</p></li>
+<li><p>The URL is http://yourhostname/sitename/check_mk/ - for example <a href="http://monhost.domain/monitoring/check_mk/">http://monhost.domain/monitoring/check_mk/</a></p></li>
+<li>
+<p>The default username/password is omdadmin/omd. To change this or add additional users log in as the site user and run htpasswd - for example:</p>
+
+<h1>su - monitoring</h1>
+
+<p>monitoring$ htpasswd -b ~/etc/htpasswd guest guest</p>
+</li>
+<li><p>A user called 'guest' is configured as a guest user but is not enabled unless a password is set (as above).</p></li>
+</ul><h2>Agent</h2>
+
+<ul>
+<li><p>Installs the check_mk-agent and check_mk-agent-logwatch packages</p></li>
 <li><p>Configures the /etc/xinetd.d/check_mk configuration file</p></li>
-</ul><h3>Example</h3>
+</ul><h3>Example 1</h3>
+
+<pre><code>include check_mk::agent
+</code></pre>
+
+<p>Installs the check_mk and check_mk_logwatch packages from the system repository
+and configured /etc/xinetd.d/check_mk with no IP whitelist restrictions.</p>
+
+<h3>Example 2</h3>
 
 <pre><code>class { 'check_mk::agent':
   version =&gt; '1.2.0p3-1',
@@ -79,13 +122,14 @@ Default: '/root/check_mk'</p>
 }
 </code></pre>
 
+<p>Installs the specified versions of the check_mk and check_mk_logwatch packages
+after retrieving them from the Puppet file store.  Configures
+/etc/xinetd.d/check_mk so that only the specified IPs (and localhost/127.0.0.1)
+are allowed to connect.</p>
+
 <h3>check_mk::agent parameters</h3>
 
-<p><em>version</em>: The version in the check_mk packages - for example if the RPM is
-'check_mk-agent-1.2.0p3-1.noarch.rpm' then the version is '1.2.0p3-1'.
-REQUIRED.</p>
-
-<p><em>filestore</em>: The location of the tarball.  Default: 'puppet:///files/check_mk'</p>
+<p><em>filestore</em>: The Puppet file store location where the packages can be found (eg. 'puppet:///files/check_mk'). Optional.</p>
 
 <p><em>ip_whitelist</em>: The list of IP addresses that are allowed to retrieve check_mk
 data. (Note that localhost is always allowed to connect.) By default any IP can
@@ -100,6 +144,10 @@ Default: '/usr/bin'</p>
 monitoring server setups.  Default: 'false'</p>
 
 <p><em>user</em>: The user that the agent runs as. Default: 'root'</p>
+
+<p><em>version</em>: The version in the check_mk packages - for example if the RPM is
+'check_mk-agent-1.2.0p3-1.noarch.rpm' then the version is '1.2.0p3-1'.
+Only required if a filestore is used.</p>
 
 <p><em>workspace</em>: The directory to use to store files used during installation.
 Default: '/root/check_mk'</p>
