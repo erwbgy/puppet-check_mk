@@ -19,7 +19,7 @@ class check_mk::install (
       package { 'omd':
         ensure   => installed,
         provider => $type,
-        source   => "${workspace}/${package_file}",
+        source   => "${workspace}/${package}",
         require  => File["${workspace}/${package}"],
       }
     }

@@ -1,6 +1,6 @@
 class check_mk::config (
-  site,
-  host_groups = undef,
+  $site,
+  $host_groups = undef,
 ) {
   $etc_dir = "/omd/sites/${site}/etc"
   $bin_dir = "/omd/sites/${site}/bin"
@@ -69,8 +69,8 @@ class check_mk::config (
   }
   # local config is in /omd/sites/${site}/etc/check_mk/main.mk.local and is appended
   concat::fragment { 'check_mk-local-config':
-    target  => "${etc_dir}/check_mk/main.mk",
     ensure  => "${etc_dir}/check_mk/main.mk.local",
+    target  => "${etc_dir}/check_mk/main.mk",
     order   => 99,
   }
   # re-read config if it changes

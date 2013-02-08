@@ -1,6 +1,7 @@
 class check_mk::agent::config (
   $ip_whitelist,
   $port,
+  $server_dir,
   $use_cache,
   $user,
 ) {

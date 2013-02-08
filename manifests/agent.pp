@@ -8,14 +8,15 @@ class check_mk::agent (
   $version      = undef,
   $workspace    = '/root/check_mk',
 ) {
-  class check_mk::agent::install {
+  class { 'check_mk::agent::install':
     version   => $version,
     filestore => $filestore,
     workspace => $workspace,
   }
-  class check_mk::agent::config {
+  class { 'check_mk::agent::config':
     ip_whitelist => $ip_whitelist,
     port         => $port,
+    server_dir   => $server_dir,
     use_cache    => $use_cache,
     user         => $user,
     require      => Class['check_mk::agent::install'],

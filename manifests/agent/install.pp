@@ -37,7 +37,7 @@ class check_mk::agent::install (
       require  => [
         File["${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm"],
         Package['check_mk-agent'],
-      ],       
+      ],
     }
   }
   else {

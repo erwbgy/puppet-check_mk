@@ -5,7 +5,7 @@ define check_mk::hostgroup (
 ) {
   $group = $title
   $group_tags = join($hostgroups[$group], ',')
-  concat::fragment { "check_mk-hostgroup-${host}":
+  concat::fragment { "check_mk-hostgroup-${group}":
     target  => $target,
     content => "  ( '${group}', [ ${group_tags} ], ALL_HOSTS ),\n",
     order   => 21,
