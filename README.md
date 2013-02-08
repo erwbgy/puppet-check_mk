@@ -24,7 +24,7 @@ Currently only tested on Redhat-like systems.
 
     include check_mk
 
-Installs the 'omd' package from the system repository. The default 'omd' site is used.
+Installs the 'monitoring' package from the system repository. The default 'monitoring' site is used.
 
 ### Example 2
 
@@ -33,7 +33,7 @@ Installs the 'omd' package from the system repository. The default 'omd' site is
       package   => 'omd-0.56-rh60-29.x86_64.rpm'
     }
 
-Installs the specified 'omd' package after retrieving it from the Puppet file store.
+Installs the specified omd package after retrieving it from the Puppet file store.
 
 ### Example 3
 
@@ -41,8 +41,8 @@ Installs the specified 'omd' package after retrieving it from the Puppet file st
       site => 'acme',
     }
 
-Installs the 'omd' package from the system repository.  A site called 'acme' is
-used making the URL http://hostname/acme/check_mk/
+Installs the omd package from the system repository.  A site called 'acme' is
+created making the URL http://hostname/acme/check_mk/ running as the 'acme' user.
 
 ### check_mk parameters
 
@@ -50,7 +50,22 @@ used making the URL http://hostname/acme/check_mk/
 
 *filestore*: The Puppet file store location where the package can be found (eg. 'puppet:///files/check_mk'). Optional.
 
+*site*: The name of the omd site (and the user/group it runs as). Default: 'monitoring'
+
 *workspace*: The directory to use to store files used during installation.  Default: '/root/check_mk'
+
+### Notes
+
+* A user and group with the same value as the site parameter is created.  By default this is 'monitoring'.
+
+* The URL is http://yourhostname/sitename/check_mk/ - for example http://monhost.domain/monitoring/check_mk/
+
+* The default username/password is omdadmin/omd. To change this or add additional users log in as the site user and run htpasswd - for example:
+
+    # su - monitoring
+    monitoring$ htpasswd -b ~/etc/htpasswd guest guest
+
+* A user called 'guest' is configured as a guest user but is not enabled unless a password is set (as above).
 
 ## Agent
 
