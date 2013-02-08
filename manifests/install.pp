@@ -1,6 +1,7 @@
 class check_mk::install (
   $filestore,
   $package,
+  $site,
   $workspace,
 ) {
   if $filestore {
@@ -15,8 +16,8 @@ class check_mk::install (
       require => File[$workspace],
     }
     if $package =~ /^omd-(.*?)\.(rpm|deb)$/ {
-      $type = $1
-      package { 'omd':
+      $type = $2
+      package { $package:
         ensure   => installed,
         provider => $type,
         source   => "${workspace}/${package}",
@@ -28,5 +29,11 @@ class check_mk::install (
     package { $package:
       ensure => installed,
     }
+  }
+  $etc_dir = "/omd/sites/${site}/etc"
+  exec { 'omd-create-site':
+    command => "/usr/bin/omd create ${site}",
+    creates => $etc_dir,
+    require => Package[$package],
   }
 }

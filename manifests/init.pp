@@ -1,12 +1,13 @@
 class check_mk (
   $filestore = undef,
   $package   = 'omd',
-  $site      = 'omd',
+  $site      = 'monitoring',
   $workspace = '/root/check_mk',
 ) {
   class { 'check_mk::install':
     filestore => $filestore,
     package   => $package,
+    site      => $site,
     workspace => $workspace,
   }
   class { 'check_mk::config':

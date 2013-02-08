@@ -4,10 +4,6 @@ class check_mk::config (
 ) {
   $etc_dir = "/omd/sites/${site}/etc"
   $bin_dir = "/omd/sites/${site}/bin"
-  exec { 'omd-create-site':
-    command => "/usr/bin/omd create ${site}",
-    creates => $etc_dir,
-  }
   file { "${etc_dir}/nagios/local":
     ensure => directory,
   }
@@ -60,7 +56,8 @@ class check_mk::config (
       content => "]\n",
       order   => 29,
     }
-    check_mk::hostgroup { keys($host_groups):
+    $groups = keys($host_groups)
+    check_mk::hostgroup { $groups:
       dir         => "${etc_dir}/nagios/local/hostgroups",
       host_groups => $host_groups,
       target      => "${etc_dir}/check_mk/main.mk",
@@ -76,16 +73,19 @@ class check_mk::config (
   # re-read config if it changes
   exec { 'check_mk-refresh':
     command     => "${bin_dir}/check_mk -I",
+    user        => $site,
     refreshonly => true,
     notify      => Exec['check_mk-reload'],
   }
   exec { 'check_mk-reload':
     command     => "${bin_dir}/check_mk -O",
+    user        => $site,
     refreshonly => true,
   }
   # re-read inventory at least daily
   exec { 'check_mk-refresh-inventory-daily':
     command  => "${bin_dir}/cmk -I",
+    user     => $site,
     schedule => 'daily',
   }
 }
