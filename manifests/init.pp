@@ -1,20 +1,16 @@
 class check_mk (
-  $version,
-  $filestore = 'puppet:///files/check_mk',
+  $filestore = undef,
+  $package   = 'omd',
+  $site      = 'omd',
   $workspace = '/root/check_mk',
 ) {
-  if ! defined(File[$workspace]) {
-    file { $workspace:
-      ensure => directory,
-    }
-  }
   class { 'check_mk::install':
     filestore => $filestore,
-    version   => $version,
+    package   => $package,
     workspace => $workspace,
-    require   => File[$workspace],
   }
   class { 'check_mk::config':
+    site      => $site,
     require   => Class['check_mk::install'],
   }
   class { 'check_mk::service':

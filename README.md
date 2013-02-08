@@ -1,38 +1,56 @@
 # check_mk
 
-Puppet module for installing and configuring a Nagios server with check_mk and
-check_mk agents.  Agent hostnames are automatically added to the server
-all_hosts configuration using stored configs.
+Puppet module for:
+
+* Installing and configuring the Open Monitoring Distribution (OMD) which
+  includes Nagios, check_mk and lots of other tools
+
+* Installing check_mk agents.
+
+Agent hostnames are automatically added to the server all_hosts configuration
+using stored configs.
 
 Currently only tested on Redhat-like systems.
 
 ## Server
 
-* Installs nagios packages from EPEL.
-
-* Unpacks the check_mk tarball and runs the setup script - this requires
-installing the g++ compiler and related tools so if this is an issue then use
-the OMD distribution instead (which you should probably use anyway for any
-important setup).
+* Installs omd package either using the system repository (eg. yum, apt) or
+  from a package file retrieved from the Puppet file store
 
 * Populates the all_hosts array in /etc/check_mk/main.mk with hostnames
   exported by check::agent classes on agent hosts
 
-### Example
+### Example 1
+
+    include check_mk
+
+Installs the 'omd' package from the system repository. The default 'omd' site is used.
+
+### Example 2
 
     class { 'check_mk':
-      version => '1.2.0p3'
+      filestore => 'puppet:///files/check_mk',
+      package   => 'omd-0.56-rh60-29.x86_64.rpm'
     }
+
+Installs the specified 'omd' package after retrieving it from the Puppet file store.
+
+### Example 3
+
+    class { 'check_mk':
+      site => 'acme',
+    }
+
+Installs the 'omd' package from the system repository.  A site called 'acme' is
+used making the URL http://hostname/acme/check_mk/
 
 ### check_mk parameters
 
-*version*: The version in the check_mk tarball - for example if the tarball is
-'check_mk-1.2.0p3.tar.gz' then the version is '1.2.0p3'. REQUIRED.
+*package*: The omd package (rpm or deb) to install. Optional.
 
-*filestore*: The location of the tarball.  Default: 'puppet:///files/check_mk'
+*filestore*: The Puppet file store location where the package can be found (eg. 'puppet:///files/check_mk'). Optional.
 
-*workspace*: The directory to use to store files used during installation.
-Default: '/root/check_mk'
+*workspace*: The directory to use to store files used during installation.  Default: '/root/check_mk'
 
 ## Agent
 

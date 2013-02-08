@@ -11,7 +11,7 @@ class check_mk::service {
       enable => true,
     }
   }
-  service { 'nagios':
+  service { 'omd':
     ensure => 'running',
     enable => true,
   }

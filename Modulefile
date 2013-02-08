@@ -1,5 +1,5 @@
 name    'erwbgy-check_mk'
-version '0.1.1'
+version '0.2.0'
 source 'https://github.com/erwbgy/puppet-check_mk.git'
 author 'erwbgy'
 license 'Apache License, Version 2.0'
