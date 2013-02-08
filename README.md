@@ -5,7 +5,7 @@ Puppet module for:
 * Installing and configuring the Open Monitoring Distribution (OMD) which
   includes Nagios, check_mk and lots of other tools
 
-* Installing check_mk agents.
+* Installing and configuring check_mk agents
 
 Agent hostnames are automatically added to the server all_hosts configuration
 using stored configs.
@@ -54,24 +54,32 @@ used making the URL http://hostname/acme/check_mk/
 
 ## Agent
 
-* Installs the check_mk-agent and check_mk-agent-logwatch RPMs
+* Installs the check_mk-agent and check_mk-agent-logwatch packages
 
 * Configures the /etc/xinetd.d/check_mk configuration file
 
-### Example
+### Example 1
+
+    include check_mk::agent
+
+Installs the check_mk and check_mk_logwatch packages from the system repository
+and configured /etc/xinetd.d/check_mk with no IP whitelist restrictions.
+
+### Example 2
 
     class { 'check_mk::agent':
       version => '1.2.0p3-1',
       ip_whitelist => [ '10.7.96.21', '10.7.96.22' ],
     }
 
+Installs the specified versions of the check_mk and check_mk_logwatch packages
+after retrieving them from the Puppet file store.  Configures
+/etc/xinetd.d/check_mk so that only the specified IPs (and localhost/127.0.0.1)
+are allowed to connect.
+
 ### check_mk::agent parameters
 
-*version*: The version in the check_mk packages - for example if the RPM is
-'check_mk-agent-1.2.0p3-1.noarch.rpm' then the version is '1.2.0p3-1'.
-REQUIRED.
-
-*filestore*: The location of the tarball.  Default: 'puppet:///files/check_mk'
+*filestore*: The Puppet file store location where the packages can be found (eg. 'puppet:///files/check_mk'). Optional.
 
 *ip_whitelist*: The list of IP addresses that are allowed to retrieve check_mk
 data. (Note that localhost is always allowed to connect.) By default any IP can
@@ -86,6 +94,10 @@ Default: '/usr/bin'
 monitoring server setups.  Default: 'false'
 
 *user*: The user that the agent runs as. Default: 'root'
+
+*version*: The version in the check_mk packages - for example if the RPM is
+'check_mk-agent-1.2.0p3-1.noarch.rpm' then the version is '1.2.0p3-1'.
+Only required if a filestore is used.
 
 *workspace*: The directory to use to store files used during installation.
 Default: '/root/check_mk'
