@@ -152,6 +152,10 @@ You can of course have as many host tags as you like. I have custom facts for
 the server role and the environment type (dev, qa, stage, prod) and define
 groups based on the role and envtype.
 
+Remember to run the Puppet agent on your agent hosts to export any host tags
+and run the Puppet agent on the monitoring host to pick up any changes to the
+host groups.
+
 ## Static host config
 
 Hosts that do not run Puppet with the check_mk module are not automatically
@@ -168,3 +172,4 @@ You can also include host tags - for example:
       'host1.domain|windows|dev',
       'host2.domain|windows|prod',
 
+Remember to run the Puppet agent on your monitoring host to pick up any changes.
