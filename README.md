@@ -50,7 +50,7 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
 *filestore*: The Puppet file store location where the package can be found (eg. 'puppet:///files/check_mk'). Optional.
 
-*host_groups*: A hash with the host group names as the keys with a list of host tags to match as values. (See Host Tags below). Optional.
+*host_groups*: A hash with the host group names as the keys with a list of host tags to match as values. (See 'Host groups and tags' below). Optional.
 
 *site*: The name of the omd site (and the user/group it runs as). Default: 'monitoring'
 
@@ -124,7 +124,7 @@ Default: '/root/check_mk'
 
 By default check_mk puts all hosts into a group called 'check_mk' but where you
 have more than a few you will often want your own groups.  We can do this by
-setting host tags on the agents and then configuring hos groups on the server
+setting host tags on the agents and then configuring host groups on the server
 side to match hosts with these tags.
 
 For example in the hiera config for your agent hosts you could have:
@@ -150,7 +150,7 @@ and on the monitoring host you could have:
 
 You can of course have as many host tags as you like. I have custom facts for
 the server role and the environment type (dev, qa, stage, prod) and define
-groups based on the role and envtype.
+groups based on the role and envtype host tags.
 
 Remember to run the Puppet agent on your agent hosts to export any host tags
 and run the Puppet agent on the monitoring host to pick up any changes to the
