@@ -50,6 +50,8 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
 *filestore*: The Puppet file store location where the package can be found (eg. 'puppet:///files/check_mk'). Optional.
 
+*host_groups*: A hash with the host group names as the keys with a list of host tags to match as values. (See Host Tags below). Optional.
+
 *site*: The name of the omd site (and the user/group it runs as). Default: 'monitoring'
 
 *workspace*: The directory to use to store files used during installation.  Default: '/root/check_mk'
@@ -65,6 +67,8 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
     monitoring$ htpasswd -b ~/etc/htpasswd guest guest
 
 * A user called 'guest' is configured as a guest user but is not enabled unless a password is set (as above).
+
+* RedHat-like RPM downloads from http://omdistro.org/projects/omd-redhat/files
 
 ## Agent
 
@@ -115,4 +119,52 @@ Only required if a filestore is used.
 
 *workspace*: The directory to use to store files used during installation.
 Default: '/root/check_mk'
+
+## Host groups and tags
+
+By default check_mk puts all hosts into a group called 'check_mk' but where you
+have more than a few you will often want your own groups.  We can do this by
+setting host tags on the agents and then configuring hos groups on the server
+side to match hosts with these tags.
+
+For example in the hiera config for your agent hosts you could have:
+
+    check_mk::agent::host_tags:
+      - '%{osfamily}'
+
+and on the monitoring host you could have:
+
+    check_mk::host_groups:
+      RedHat:
+        description: 'RedHat or_CentOS hosts'
+        host_tags:
+          - RedHat
+      Debian:
+        description: 'Debian or Ubuntu_hosts'
+        host_tags:
+          - Debian
+      SuSE:
+        description: 'SuSE hosts'
+        host_tags:
+          - Suse
+
+You can of course have as many host tags as you like. I have custom facts for
+the server role and the environment type (dev, qa, stage, prod) and define
+groups based on the role and envtype.
+
+## Static host config
+
+Hosts that do not run Puppet with the check_mk module are not automatically
+added to the all_hosts list in main.mk. To manually include these hosts you can
+add them to '/omd/sites/monitoring/etc/check_mk/all_hosts_static' (replacing
+'monitoring' with your site name).  Use the quoted fully qualified domain name
+with a two-space prefix and a comma suffix - for example:
+
+      'host1.domain',
+      'host2.domain',
+
+You can also include host tags - for example:
+
+      'host1.domain|windows|dev',
+      'host2.domain|windows|prod',
 

@@ -1,5 +1,6 @@
 class check_mk::agent (
   $filestore    = undef,
+  $host_tags    = undef,
   $ip_whitelist = undef,
   $port         = '6556',
   $server_dir   = '/usr/bin',
@@ -22,5 +23,7 @@ class check_mk::agent (
     require      => Class['check_mk::agent::install'],
   }
   include check_mk::agent::service
-  @@check_mk::host { $::fqdn: }
+  @@check_mk::host { $::fqdn:
+    host_tags => $host_tags,
+  }
 }

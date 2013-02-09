@@ -41,6 +41,12 @@ class check_mk::config (
     target => "${etc_dir}/check_mk/main.mk",
     notify => Exec['check_mk-refresh']
   }
+  # local list of hosts is in /omd/sites/${site}/etc/check_mk/all_hosts_static and is appended
+  concat::fragment { 'all-hosts-static':
+    ensure  => "${etc_dir}/check_mk/all_hosts_static",
+    target  => "${etc_dir}/check_mk/main.mk",
+    order   => 18,
+  }
   # host_groups
   if $host_groups {
     file { "${etc_dir}/nagios/local/hostgroups":
@@ -59,7 +65,7 @@ class check_mk::config (
     $groups = keys($host_groups)
     check_mk::hostgroup { $groups:
       dir         => "${etc_dir}/nagios/local/hostgroups",
-      host_groups => $host_groups,
+      hostgroups  => $host_groups,
       target      => "${etc_dir}/check_mk/main.mk",
       notify      => Exec['check_mk-refresh']
     }

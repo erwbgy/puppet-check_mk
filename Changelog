@@ -1,3 +1,13 @@
+0.3.0:
+
+* Added host tags to agent config so that host groups can be auto-populated
+
+* Fixed incorrect package name when using a file store that was causing the
+package existence check to fail always causing an often failing reinstall
+
+* Enable a static list of hosts to be specified for those without the Puppet
+check_mk module installed
+
 0.2.0:
 
 * Switched to using OMD rather than manually compiling check_mk
