@@ -17,6 +17,15 @@ check_mk::host_groups:
     host_tags:
       - 'my-db'
 
+check_mk::ignored_services:
+  'LOG security':
+    tags:
+      'windows'
+  'NFS mount /home/':
+    hosts:
+      - 'lnxuser1.domain.com'
+      - 'lnxuser2.domain.com'
+
 # Monitoring Agent
 check_mk::agent::filestore: 'puppet:///files/check_mk'
 check_mk::agent::version: '1.2.0p3-1'
