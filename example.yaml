@@ -1,0 +1,30 @@
+# Monitoring Server
+check_mk::filestore: 'puppet:///files/check_mk'
+check_mk::package:   'omd-0.56-rh60-29.x86_64.rpm'
+
+check_mk::host_groups:
+  'Puppet_Masters':
+    host_tags:
+      - 'puppet-master'
+
+  'My_App':
+    description: 'My Application'
+    host_tags:
+      - 'my-app'
+
+  'My_DB':
+    description: 'My Database'
+    host_tags:
+      - 'my-db'
+
+# Monitoring Agent
+check_mk::agent::filestore: 'puppet:///files/check_mk'
+check_mk::agent::version: '1.2.0p3-1'
+
+# Set host tags based on built-in and custom facts
+check_mk::agent::host_tags:
+  - '%{envtype}'
+  - '%{kernel}'
+  - '%{role}'
+  - '%{location}'
+
