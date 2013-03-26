@@ -70,3 +70,24 @@ check_mk::agent::host_tags:
   - '%{role}'
   - '%{location}'
 
+check_mk::agent::jolokia::server:   '127.0.0.1'
+check_mk::agent::jolokia::port:     '8080'
+check_mk::agent::jolokia::user:     'monitoring'
+check_mk::agent::jolokia::password: 'tinstaafl'
+check_mk::agent::jolokia::suburi:   'jolokia'
+
+check_mk::agent::jolokia::instances:
+  'My-App':
+    server: '10.0.0.1'
+    port:   '8190'
+
+check_mk::agent::logwatch::keep_defaults: 'true'
+check_mk::agent::logwatch::logfiles:
+  '/apps/tomcat1/logs/tomcat/catalina.*.log':
+    critical:
+      - '^SERVERE:'
+      - '^ERROR:'
+    warning:
+      - '^WARNING:'
+    ignore:
+      - '^INFO'
