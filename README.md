@@ -68,7 +68,7 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
 * A user called 'guest' is configured as a guest user but is not enabled unless a password is set (as above).
 
-* RedHat-like RPM downloads from http://omdistro.org/projects/omd-redhat/files
+* RedHat-like RPM downloads from http://files.omdistro.org/releases/centos_rhel/
 
 ## Agent
 
