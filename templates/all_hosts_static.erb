@@ -1,0 +1,4 @@
+<% static_hosts = scope.lookupvar('check_mk::config::all_hosts_static') -%>
+<% static_hosts.each do |check_host| -%>
+  '<%= host_name %>',
+<% end -%>
