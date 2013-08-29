@@ -1,0 +1,3 @@
+check_mk::all_hosts_static:
+  - server1.domain.com
+  - server2.domain.com

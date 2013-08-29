@@ -20,6 +20,10 @@ class check_mk::config (
     path   => "${etc_dir}/check_mk/multisite.mk",
     notify => Class['check_mk::service'],
   }
+  file { "${etc_dir}/check_mk/all_hosts_static":
+      ensure  => file,
+      content => template('check_mk/all_hosts_static.erb'),
+  }
   concat { "${etc_dir}/check_mk/main.mk":
     owner  => 'root',
     group  => 'root',
