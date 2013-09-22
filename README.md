@@ -158,18 +158,20 @@ host groups.
 
 ## Static host config
 
-Hosts that do not run Puppet with the check_mk module are not automatically
-added to the all_hosts list in main.mk. To manually include these hosts you can
-add them to '/omd/sites/monitoring/etc/check_mk/all_hosts_static' (replacing
-'monitoring' with your site name).  Use the quoted fully qualified domain name
-with a two-space prefix and a comma suffix - for example:
+Hosts that do not run Puppet with the check_mk module needs to get added to hiera.
+check_mk::config creates the config file 
+/omd/sites/monitoring/etc/check_mk/all_hosts_static from a template.
+The template will look for hiera variables.
+The hiera variable check_mk::all_hosts_static has to be an array:
 
-      'host1.domain',
-      'host2.domain',
+check_mk::all_hosts_static:
+  - host1.domain
+  - host2.domain
+
 
 You can also include host tags - for example:
 
-      'host1.domain|windows|dev',
-      'host2.domain|windows|prod',
+check_mk::all_hosts_static:
+  - host1.domain|windows|dev,
+  - host2.domain|windows|prod,
 
-Remember to run the Puppet agent on your monitoring host to pick up any changes.
