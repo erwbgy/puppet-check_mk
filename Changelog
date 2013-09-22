@@ -1,3 +1,11 @@
+0.3.1:
+
+* Added real world example config
+
+* Fixed RedHat-like RPM URL (thanks #abien)
+
+* Fetch static hosts config from hiera (thanks Martin Alfke)
+
 0.3.0:
 
 * Added host tags to agent config so that host groups can be auto-populated
