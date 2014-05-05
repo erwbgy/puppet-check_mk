@@ -1,3 +1,7 @@
+# Class check_mk::agent::config
+#
+# Configure check_mk agent
+#
 class check_mk::agent::config (
   $ip_whitelist,
   $port,
@@ -23,7 +27,11 @@ class check_mk::agent::config (
     group   => 'root',
     mode    => '0444',
     content => template('check_mk/agent/check_mk.erb'),
-    require => Package['check_mk-agent','check_mk-agent-logwatch'],
+    notify  => Class['check_mk::agent::service'],
+  }
+  # Avoid duplicate file created from package install
+  file { '/etc/xinet.d/check-mk-agent':
+    ensure => absent,
     notify  => Class['check_mk::agent::service'],
   }
 }

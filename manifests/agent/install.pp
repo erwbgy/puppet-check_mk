@@ -1,3 +1,7 @@
+# Class: check_mk::agent::install
+#
+# Install the check_mk::agent
+#
 class check_mk::agent::install (
   $version,
   $filestore,
@@ -41,13 +45,29 @@ class check_mk::agent::install (
     }
   }
   else {
-    package { 'check_mk-agent':
+    case $::operatingsystem {
+      centos, redhat: {
+        $check_mk_agent_packagename = 'check-mk-agent'
+        # Redhat/CentOS Package has logwatch build in
+        $check_mk_agent_logwatch_packagename = undef
+      }
+      debian, ubuntu: {
+        $check_mk_agent_packagename = 'check_mk-agent'
+        $check_mk_agent_logwatch_packagename = 'check_mk-agent-logwatch'
+      }
+      default: {
+        fail('Unsupported operating system in check_mk::agent')
+      }
+    }
+    package { $check_mk_agent_packagename:
       ensure  => present,
       require => Package['xinetd'],
     }
-    package { 'check_mk-agent-logwatch':
-      ensure  => present,
-      require => Package['check_mk-agent'],
+    if ( $check_mk_agent_logwatch_packagename ) {
+      package { $check_mk_agent_logwatch_packagename:
+        ensure  => present,
+        require => Package[$check_mk_agent_packagename]
+      }
     }
   }
 }
