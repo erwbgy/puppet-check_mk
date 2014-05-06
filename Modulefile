@@ -8,4 +8,5 @@ description 'Install and configure check_mk agent and Nagios plugin'
 project_page 'https://github.com/erwbgy/puppet-check_mk'
 dependency 'puppetlabs/stdlib', '>= 2.6.0'
 dependency 'ripienaar/concat', '>= 0.2.0'
-dependency 'opentable/download_file', '>= 0.0.2'
+# Windows
+dependency 'joshcooper/powershell', '>= 0.0.6'

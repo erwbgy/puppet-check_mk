@@ -12,16 +12,14 @@ class check_mk::agent (
   $user         = 'root',
   $version      = undef,
   $workspace    = '/root/check_mk',
+  $windows_installer =
+    'http://mathias-kettner.de/download/check-mk-agent-1.2.4p2.exe'
 ) {
   Class['check_mk::agent::install'] ->
   Class['check_mk::agent::config'] ~>
   Class['check_mk::agent::service']
 
-  class { 'check_mk::agent::install':
-    version                    => $version,
-    filestore                  => $filestore,
-    workspace                  => $workspace,
-  }
+  include check_mk::agent::install
 
   class { 'check_mk::agent::config':
     ip_whitelist => $ip_whitelist,
@@ -32,6 +30,7 @@ class check_mk::agent (
   }
 
   include check_mk::agent::service
+
   @@check_mk::host { $::fqdn:
     host_tags => $host_tags,
   }
