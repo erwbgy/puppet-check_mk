@@ -6,6 +6,7 @@ class check_mk::agent::install (
   $version,
   $filestore,
   $workspace,
+  $windows_installer = 'http://mathias-kettner.de/download/check-mk-agent-1.2.4p2.exe'
 ) {
   if ! defined(Package['xinetd']) {
     package { 'xinetd':
@@ -55,18 +56,31 @@ class check_mk::agent::install (
         $check_mk_agent_packagename = 'check_mk-agent'
         $check_mk_agent_logwatch_packagename = 'check_mk-agent-logwatch'
       }
+      windows: {
+        # No Custom Code yet
+      }
       default: {
-        fail('Unsupported operating system in check_mk::agent')
+        fail("Unsupported operating system in check_mk::agent - ${::operatingsystem}")
       }
     }
-    package { $check_mk_agent_packagename:
-      ensure  => present,
-      require => Package['xinetd'],
-    }
-    if ( $check_mk_agent_logwatch_packagename ) {
-      package { $check_mk_agent_logwatch_packagename:
-        ensure  => present,
-        require => Package[$check_mk_agent_packagename]
+    case $::kernel {
+      linux: {
+        package { $check_mk_agent_packagename:
+          ensure  => present,
+          require => Package['xinetd'],
+        }
+        if ( $check_mk_agent_logwatch_packagename ) {
+          package { $check_mk_agent_logwatch_packagename:
+            ensure  => present,
+            require => Package[$check_mk_agent_packagename]
+          }
+        }
+      }
+      windows: {
+        # TODO - Add windows install
+      }
+      default: {
+        fail("Unsupported kernel in check_mk::agent::install - ${::kernel}")
       }
     }
   }
