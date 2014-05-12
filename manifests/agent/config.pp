@@ -23,18 +23,16 @@ class check_mk::agent::config (
       else {
         $only_from = undef
       }
-      file { '/etc/xinetd.d/check_mk':
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0444',
-        content => template('check_mk/agent/check_mk.erb'),
-        notify  => Class['check_mk::agent::service'],
+      xinetd::service { 'check_mk':
+        port      => $port,
+        server    => $server,
+        user      => $user,
+        only_from => "127.0.0.1 $only_from"
       }
-      # Avoid duplicate file created from package install
-      file { '/etc/xinet.d/check-mk-agent':
-        ensure => absent,
-        notify => Class['check_mk::agent::service'],
+      xinetd::service { 'check-mk-agent':
+        ensure => 'absent',
+        port      => $port,
+        server    => $server,
       }
     }
     default: {

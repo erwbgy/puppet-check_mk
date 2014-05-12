@@ -8,6 +8,7 @@ class check_mk::agent::install (
   $workspace = $check_mk::agent::workspace,
   $windows_installer = $check_mk::agent::windows_installer,
 ) {
+
   if $filestore {
     if ! defined(File[$workspace]) {
       file { $workspace:
@@ -60,11 +61,7 @@ class check_mk::agent::install (
     }
     case $::kernel {
       linux: {
-        if ! defined(Package['xinetd']) {
-          package { 'xinetd':
-            ensure => present,
-          }
-        }
+        include xinetd
 
         package { $check_mk_agent_packagename:
           ensure  => present,

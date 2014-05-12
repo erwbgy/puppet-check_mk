@@ -6,12 +6,7 @@
 class check_mk::agent::service {
   case $::kernel {
     linux: {
-      if ! defined(Service['xinetd']) {
-        service { 'xinetd':
-          ensure => 'running',
-          enable => true,
-        }
-      }
+      # Service done by xinetd module
     }
     windows: {
       service { 'Check_MK_Agent':
