@@ -25,10 +25,11 @@ class check_mk::agent::config (
         $only_from = undef
       }
       xinetd::service { 'check_mk':
-        port      => $port,
-        server    => $server,
-        user      => $user,
-        only_from => $only_from
+        port         => $port,
+        server       => $server,
+        user         => $user,
+        only_from    => $only_from,
+        service_type => 'UNLISTED'
       }
       xinetd::service { 'check-mk-agent':
         ensure => 'absent',
