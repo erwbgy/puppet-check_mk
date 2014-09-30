@@ -41,12 +41,22 @@ class check_mk::agent::install (
     }
   }
   else {
+    $check_mk_agent = $::osfamily ? {
+      'Debian' => 'check-mk-agent',
+      default  => 'check_mk-agent',
+    }
+    $check_mk_agent_logwatch = $::osfamily ? {
+      'Debian' => 'check-mk-agent-logwatch',
+      default  => 'check_mk-agent-logwatch',
+    }
     package { 'check_mk-agent':
       ensure  => present,
+      name    => $check_mk_agent,
       require => Package['xinetd'],
     }
     package { 'check_mk-agent-logwatch':
       ensure  => present,
+      name    => $check_mk_agent_logwatch,
       require => Package['check_mk-agent'],
     }
   }
