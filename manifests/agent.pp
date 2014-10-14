@@ -17,7 +17,8 @@ class check_mk::agent (
 ) {
   Class['check_mk::agent::install'] ->
   Class['check_mk::agent::config'] ~>
-  Class['check_mk::agent::service']
+  Class['check_mk::agent::service'] ->
+  Class['check_mk::agent']
 
   include check_mk::agent::install
 

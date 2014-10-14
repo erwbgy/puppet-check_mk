@@ -3,13 +3,18 @@
 # Configure check_mk agent
 #
 class check_mk::agent::config (
-  #  $ip_whitelist = $check_mk::agent::ip_whitelist,
-  $ip_whitelist = ['192.168.20.1'],
+  $ip_whitelist = $check_mk::agent::ip_whitelist,
   $port         = $check_mk::agent::port,
   $server_dir   = $check_mk::agent::server_dir,
   $use_cache    = $check_mk::agent::use_cache,
   $user         = $check_mk::agent::user,
 ) {
+  if $ip_whitelist {
+    $only_from = join($ip_whitelist, ' ')
+  } else {
+    $only_from = undef
+  }
+
   case $::kernel {
     linux: {
       if $use_cache {
@@ -17,12 +22,6 @@ class check_mk::agent::config (
       }
       else {
         $server = "${server_dir}/check_mk_agent"
-      }
-      if $ip_whitelist {
-        $ip_whitelist_string = join($ip_whitelist, ' ')
-        $only_from = "127.0.0.1 ${ip_whitelist_string}"
-      } else {
-        $only_from = undef
       }
       xinetd::service { 'check_mk':
         port         => $port,
@@ -38,7 +37,9 @@ class check_mk::agent::config (
       }
     }
     default: {
-      # Skipping Configuration for non linux
+      file { 'C:/Program Files (x86)/check_mk/check_mk.ini':
+        content => template('check_mk/agent/check_mk.ini.erb'),
+      }
     }
   }
 }
