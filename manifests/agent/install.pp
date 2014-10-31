@@ -18,6 +18,9 @@ class check_mk::agent::install (
     if $provider == 'rpm' {
       $pkg_suffix = '${pkg_suffix}'
     } elsif $provider == 'dpkg' {
+      notify { 'Make sure you have renamed the deb packages in order to match redhat naming conventions (see source).':
+        loglevel => warning,
+      }
       $pkg_suffix = '_all.deb'
     } else {
       notify { 'Provider not recognized':}
