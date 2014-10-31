@@ -2,6 +2,7 @@ class check_mk::agent::install (
   $version,
   $filestore,
   $workspace,
+  $provider,
 ) {
   if ! defined(Package['xinetd']) {
     package { 'xinetd':
@@ -14,28 +15,35 @@ class check_mk::agent::install (
         ensure => directory,
       }
     }
-    file { "${workspace}/check_mk-agent-${version}.noarch.rpm":
+    if $provider == 'rpm' {
+      $pkg_suffix = '${pkg_suffix}'
+    } elsif $provider == 'dpkg' {
+      $pkg_suffix = '_all.deb'
+    } else {
+      notify { 'Provider not recognized':}
+    }
+    file { "${workspace}/check_mk-agent-${version}${pkg_suffix}":
       ensure  => present,
-      source  => "${filestore}/check_mk-agent-${version}.noarch.rpm",
+      source  => "${filestore}/check_mk-agent-${version}${pkg_suffix}",
       require => Package['xinetd'],
     }
-    file { "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm":
+    file { "${workspace}/check_mk-agent-logwatch-${version}${pkg_suffix}":
       ensure  => present,
-      source  => "${filestore}/check_mk-agent-logwatch-${version}.noarch.rpm",
+      source  => "${filestore}/check_mk-agent-logwatch-${version}${pkg_suffix}",
       require => Package['xinetd'],
     }
     package { 'check_mk-agent':
       ensure   => present,
-      provider => 'rpm',
-      source   => "${workspace}/check_mk-agent-${version}.noarch.rpm",
-      require  => File["${workspace}/check_mk-agent-${version}.noarch.rpm"],
+      provider => $provider,
+      source   => "${workspace}/check_mk-agent-${version}${pkg_suffix}",
+      require  => File["${workspace}/check_mk-agent-${version}${pkg_suffix}"],
     }
     package { 'check_mk-agent-logwatch':
       ensure   => present,
-      provider => 'rpm',
-      source   => "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm",
+      provider => $provider,
+      source   => "${workspace}/check_mk-agent-logwatch-${version}${pkg_suffix}",
       require  => [
-        File["${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm"],
+        File["${workspace}/check_mk-agent-logwatch-${version}${pkg_suffix}"],
         Package['check_mk-agent'],
       ],
     }
