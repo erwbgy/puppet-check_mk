@@ -17,7 +17,7 @@ class check_mk::agent::config (
   else {
     $only_from = undef
   }
-  file { '/etc/xinetd.d/check_mk':
+  file { '/etc/xinetd.d/check-mk-agent':
     ensure  => present,
     owner   => 'root',
     group   => 'root',
