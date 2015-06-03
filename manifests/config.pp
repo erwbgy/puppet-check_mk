@@ -1,3 +1,4 @@
+
 class check_mk::config (
   $site,
   $host_groups = undef,
@@ -47,9 +48,9 @@ class check_mk::config (
   }
   # local list of hosts is in /omd/sites/${site}/etc/check_mk/all_hosts_static and is appended
   concat::fragment { 'all-hosts-static':
-    ensure  => "${etc_dir}/check_mk/all_hosts_static",
-    target  => "${etc_dir}/check_mk/main.mk",
-    order   => 18,
+    ensure => "${etc_dir}/check_mk/all_hosts_static",
+    target => "${etc_dir}/check_mk/main.mk",
+    order  => 18,
   }
   # host_groups
   if $host_groups {
@@ -68,17 +69,17 @@ class check_mk::config (
     }
     $groups = keys($host_groups)
     check_mk::hostgroup { $groups:
-      dir         => "${etc_dir}/nagios/local/hostgroups",
-      hostgroups  => $host_groups,
-      target      => "${etc_dir}/check_mk/main.mk",
-      notify      => Exec['check_mk-refresh']
+      dir        => "${etc_dir}/nagios/local/hostgroups",
+      hostgroups => $host_groups,
+      target     => "${etc_dir}/check_mk/main.mk",
+      notify     => Exec['check_mk-refresh']
     }
   }
   # local config is in /omd/sites/${site}/etc/check_mk/main.mk.local and is appended
   concat::fragment { 'check_mk-local-config':
-    ensure  => "${etc_dir}/check_mk/main.mk.local",
-    target  => "${etc_dir}/check_mk/main.mk",
-    order   => 99,
+    ensure => "${etc_dir}/check_mk/main.mk.local",
+    target => "${etc_dir}/check_mk/main.mk",
+    order  => 99,
   }
   # re-read config if it changes
   exec { 'check_mk-refresh':

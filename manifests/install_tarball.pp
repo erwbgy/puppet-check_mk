@@ -35,14 +35,14 @@ class check_mk::install_tarball (
     ensure  => present,
   }
   file { "${workspace}/check_mk-${version}.tar.gz":
-    ensure  => present,
-    source  => "${filestore}/check_mk-${version}.tar.gz",
+    ensure => present,
+    source => "${filestore}/check_mk-${version}.tar.gz",
   }
   exec { 'unpack-check_mk-tarball':
-    command     => "/bin/tar -zxf ${workspace}/check_mk-${version}.tar.gz",
-    cwd         => $workspace,
-    creates     => "${workspace}/check_mk-${version}",
-    require     => File["${workspace}/check_mk-${version}.tar.gz"],
+    command => "/bin/tar -zxf ${workspace}/check_mk-${version}.tar.gz",
+    cwd     => $workspace,
+    creates => "${workspace}/check_mk-${version}",
+    require => File["${workspace}/check_mk-${version}.tar.gz"],
   }
   exec { 'change-setup-config-location':
     command => "/usr/bin/perl -pi -e 's#^SETUPCONF=.*?$#SETUPCONF=${workspace}/check_mk_setup.conf#' ${workspace}/check_mk-${version}/setup.sh",
