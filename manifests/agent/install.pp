@@ -1,8 +1,9 @@
 class check_mk::agent::install (
-  $version,
+  $version = "present",
   $filestore,
   $workspace,
-  $package_checkmk_ensure = "present",
+  $package_name = "check_mk-agent",
+  
 ) {
   if ! defined(Package['xinetd']) {
     package { 'xinetd':
@@ -21,17 +22,17 @@ class check_mk::agent::install (
       require => Package['xinetd'],
     }
 
-    package { 'check-mk-agent':
+    package { "${package_name}":
       ensure   => present,
       provider => 'rpm',
-      source   => "${workspace}/check-mk-agent-${version}.noarch.rpm",
-      require  => File["${workspace}/check-mk-agent-${version}.noarch.rpm"],
+      source   => "${workspace}/${package_name}-${version}.noarch.rpm",
+      require  => File["${workspace}/${package_name}-${version}.noarch.rpm"],
     }
 
   }
   else {
-    package { 'check-mk-agent':
-      ensure  => $package_checkmk_ensure,
+    package { "${package_name}":
+      ensure  => $version,
       require => Package['xinetd'],
     }
   }
