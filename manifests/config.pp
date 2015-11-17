@@ -90,9 +90,11 @@ class check_mk::config (
     command     => "/bin/su -l -c '${bin_dir}/check_mk -O' ${site}",
     refreshonly => true,
   }
-  # re-read inventory at least daily
-  exec { 'check_mk-refresh-inventory-daily':
-    command  => "/bin/su -l -c '${bin_dir}/check_mk -O' ${site}",
-    schedule => 'daily',
+  # re-read inventory daily
+  cron { 'check_mk-refresh-inventory-daily':
+    user    => 'root',
+    command => "sudo -i -u ${site} ${bin_dir}/check_mk -O",
+    minute  => 0,
+    hour    => 0,
   }
 }
