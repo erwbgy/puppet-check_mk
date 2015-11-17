@@ -10,7 +10,7 @@ Puppet module for:
 Agent hostnames are automatically added to the server all_hosts configuration
 using stored configs.
 
-Currently only tested on Redhat-like systems.
+Original code by erwbgy, forked as upstream seems unmaintained.
 
 ## Server
 
