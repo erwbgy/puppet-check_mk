@@ -1,3 +1,10 @@
+0.4.0:
+
+* Fix all_hosts_static.erb, update xinetd on wheezy and use cron instead of a
+scheduled exec.
+
+* Package a new version has upstream seems unmaintained.
+
 0.3.0:
 
 * Added host tags to agent config so that host groups can be auto-populated
