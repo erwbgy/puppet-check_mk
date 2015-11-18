@@ -93,7 +93,7 @@ class check_mk::config (
   # re-read inventory daily
   cron { 'check_mk-refresh-inventory-daily':
     user    => 'root',
-    command => "sudo -i -u ${site} ${bin_dir}/check_mk -O",
+    command => "su -l -c '${bin_dir}/check_mk -O' ${site}",
     minute  => 0,
     hour    => 0,
   }
