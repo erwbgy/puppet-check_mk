@@ -1,3 +1,6 @@
+# _Unmaintained_
+I no longer use Puppet actively and this software has not been maintained for some time.
+
 # check_mk
 
 Puppet module for:
