@@ -1,29 +1,57 @@
+# == Class: check_mk::agent::config
+#
+# Configure check_mk agent.
+#
+# === Parameters
+#
+# [*ip_whitelist*]
+#   Array of IP allowed to access the check_mk agent.
+#   Default: undef
+#
+# [*port*]
+#   Check_mk port
+#   Default: undef
+#
+# [*server_dir*]
+#   Check_mk server directory.
+#   Default: undef
+#
+# [*use_cache*]
+#   Enable cache.
+#   Default: undef
+#
+# [*user*]
+#   Check_mk user.
+#   Default: undef
+#
 class check_mk::agent::config (
-  $ip_whitelist,
-  $port,
-  $server_dir,
-  $use_cache,
-  $user,
+  $ip_whitelist = undef,
+  $port = undef,
+  $server_dir = undef,
+  $use_cache = undef,
+  $user = undef,
 ) {
   if $use_cache {
     $server = "${server_dir}/check_mk_caching_agent"
-  }
-  else {
+  } else {
     $server = "${server_dir}/check_mk_agent"
   }
+
   if $ip_whitelist {
     $only_from = join($ip_whitelist, ' ')
-  }
-  else {
+  } else {
     $only_from = undef
   }
+
   file { '/etc/xinetd.d/check_mk':
     ensure  => present,
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
     content => template('check_mk/agent/check_mk.erb'),
-    require => Package['check_mk-agent','check_mk-agent-logwatch'],
+    require => Package['check_mk-agent'],
     notify  => Class['check_mk::agent::service'],
   }
 }
+
+# vim: set et sta sw=2 ts=2 sts=2 noci noai:a

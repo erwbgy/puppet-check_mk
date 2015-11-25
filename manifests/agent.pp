@@ -8,11 +8,13 @@ class check_mk::agent (
   $user         = 'root',
   $version      = undef,
   $workspace    = '/root/check_mk',
+  $package      = undef,
 ) {
   class { 'check_mk::agent::install':
     version   => $version,
     filestore => $filestore,
     workspace => $workspace,
+    package   => $package,
   }
   class { 'check_mk::agent::config':
     ip_whitelist => $ip_whitelist,

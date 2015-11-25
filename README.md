@@ -72,7 +72,7 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
 ## Agent
 
-* Installs the check_mk-agent and check_mk-agent-logwatch packages
+* Installs the check_mk-agent package.
 
 * Configures the /etc/xinetd.d/check_mk configuration file
 
@@ -80,7 +80,7 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
     include check_mk::agent
 
-Installs the check_mk and check_mk_logwatch packages from the system repository
+Installs the check_mk package from the system repository
 and configures /etc/xinetd.d/check_mk with no IP whitelist restrictions.
 
 ### Example 2
@@ -90,7 +90,7 @@ and configures /etc/xinetd.d/check_mk with no IP whitelist restrictions.
       ip_whitelist => [ '10.7.96.21', '10.7.96.22' ],
     }
 
-Installs the specified versions of the check_mk and check_mk_logwatch packages
+Installs the specified versions of the check_mk package
 after retrieving them from the Puppet file store.  Configures
 /etc/xinetd.d/check_mk so that only the specified IPs (and localhost/127.0.0.1)
 are allowed to connect.
