@@ -23,7 +23,7 @@ class check_mk::agent::config (
     group   => 'root',
     mode    => '0444',
     content => template('check_mk/agent/check_mk.erb'),
-    require => Package['check_mk-agent','check_mk-agent-logwatch'],
+    require => Package['check_mk-agent'],
     notify  => Class['check_mk::agent::service'],
   }
 }
