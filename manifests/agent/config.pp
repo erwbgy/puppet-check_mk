@@ -43,14 +43,26 @@ class check_mk::agent::config (
     $only_from = undef
   }
 
-  file { '/etc/xinetd.d/check_mk':
-    ensure  => present,
+  $xinetd_file = $::osfamily ? {
+    'RedHat' => '/etc/xinetd.d/check-mk-agent',
+    default  => '/etc/xinetd.d/check_mk',
+  }
+
+  file { $xinetd_file:
+    ensure  => 'file',
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
     content => template('check_mk/agent/check_mk.erb'),
     require => Package['check_mk-agent'],
     notify  => Class['check_mk::agent::service'],
+  }
+
+  # Delete file from older check_mk package version
+  if $::osfamily == 'RedHat' {
+    file { '/etc/xinetd.d/check_mk':
+      ensure => 'absent',
+    }
   }
 }
 
