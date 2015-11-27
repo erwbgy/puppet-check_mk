@@ -43,7 +43,12 @@ class check_mk::agent::config (
     $only_from = undef
   }
 
-  file { '/etc/xinetd.d/check_mk':
+  $xinetd_file = $::osfamily ? {
+    'RedHat' => '/etc/xinetd.d/check-mk-agent',
+    default  => '/etc/xinetd.d/check_mk',
+  }
+
+  file { $xinetd_file:
     ensure  => present,
     owner   => 'root',
     group   => 'root',
