@@ -1,5 +1,8 @@
 # check_mk
 
+[![Puppet Forge](http://img.shields.io/puppetforge/v/gnubilafrance/check_mk.svg)](https://forge.puppetlabs.com/gnubilafrance/check_mk)
+[![Build Status](https://travis-ci.org/gnubila-france/puppet-check_mk.png?branch=master)](https://travis-ci.org/gnubila-france/puppet-check_mk)
+
 Puppet module for:
 
 * Installing and configuring the Open Monitoring Distribution (OMD) which
