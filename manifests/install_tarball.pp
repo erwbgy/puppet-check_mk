@@ -1,8 +1,17 @@
+# Class check_mk::install_tarball
+#
+# Install check_mk using tarball
+#
 class check_mk::install_tarball (
-  $filestore,
-  $version,
-  $workspace,
+  $version = undef,
+  $filestore = $check_mk::filestore,
+  $workspace = $check_mk::workspace,
 ) {
+  if ( ! $version ) {
+    fail('check_mk::install_tarball requires $version')
+  }
+  include xinetd
+
   package { 'nagios':
     ensure => present,
     notify => Exec['set-nagiosadmin-password', 'set-guest-password', 'add-apache-to-nagios-group'],
@@ -31,7 +40,7 @@ class check_mk::install_tarball (
     ensure  => present,
     require => Package['nagios'],
   }
-  package { [ 'xinetd', 'mod_python', 'make', 'gcc-c++', 'tar', 'gzip' ]:
+  package { [ 'mod_python', 'make', 'gcc-c++', 'tar', 'gzip' ]:
     ensure  => present,
   }
   file { "${workspace}/check_mk-${version}.tar.gz":

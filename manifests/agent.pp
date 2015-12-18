@@ -1,3 +1,7 @@
+# Class: check_mk::agent
+#
+# Install and configure the check_mk::agent
+#
 class check_mk::agent (
   $filestore    = undef,
   $host_tags    = undef,
@@ -8,21 +12,26 @@ class check_mk::agent (
   $user         = 'root',
   $version      = undef,
   $workspace    = '/root/check_mk',
+  $windows_installer =
+    'http://mathias-kettner.de/download/check-mk-agent-1.2.4p2.exe'
 ) {
-  class { 'check_mk::agent::install':
-    version   => $version,
-    filestore => $filestore,
-    workspace => $workspace,
-  }
+  Class['check_mk::agent::install'] ->
+  Class['check_mk::agent::config'] ~>
+  Class['check_mk::agent::service'] ->
+  Class['check_mk::agent']
+
+  include check_mk::agent::install
+
   class { 'check_mk::agent::config':
     ip_whitelist => $ip_whitelist,
     port         => $port,
     server_dir   => $server_dir,
     use_cache    => $use_cache,
     user         => $user,
-    require      => Class['check_mk::agent::install'],
   }
+
   include check_mk::agent::service
+
   @@check_mk::host { $::fqdn:
     host_tags => $host_tags,
   }

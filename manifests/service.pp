@@ -5,12 +5,7 @@ class check_mk::service {
       enable => true,
     }
   }
-  if ! defined(Service[xinetd]) {
-    service { 'xinetd':
-      ensure => 'running',
-      enable => true,
-    }
-  }
+  # xinetd service handled by xinetd module
   service { 'omd':
     ensure => 'running',
     enable => true,
