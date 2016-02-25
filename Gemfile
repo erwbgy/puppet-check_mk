@@ -14,4 +14,10 @@ else
   gem 'puppet', :require => false
 end
 
+if rspecpuppetversion = ENV['RSPEC_GEM_VERSION']
+  gem 'rspec', rspecpuppetversion, :require => false
+else
+  gem 'rspec', :require => false
+end
+
 # vim:ft=ruby
