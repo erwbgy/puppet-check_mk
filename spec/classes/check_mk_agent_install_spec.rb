@@ -4,17 +4,19 @@ describe 'check_mk::agent::install', :type => :class do
   context 'RedHat Linux' do
     let :facts do
       {
-          :kernel => 'Linux',
-          :operatingsystem => 'Redhat',
           :osfamily => 'Redhat',
       }
     end
-    context 'with necessary parameters set' do
+
+    context 'with default parameters' do
+      it { should contain_class('check_mk::agent::install') }
+      it { should contain_package('xinetd') }
+      it { should contain_package('check_mk-agent').with_name('check-mk-agent') }
+    end
+
+    context 'with custom package' do
       let :params do
         {
-            :version => '1.2.3',
-            :filestore => false,
-            :workspace => '/workspace',
             :package => 'custom-package',
         }
       end
@@ -49,4 +51,46 @@ describe 'check_mk::agent::install', :type => :class do
     end
   end
 
+  context 'Debian Linux' do
+    let :facts do
+      {
+          :osfamily => 'Debian',
+      }
+    end
+
+    context 'with default parameters' do
+      it { should contain_class('check_mk::agent::install') }
+      it { should contain_package('xinetd') }
+      it { should contain_package('check_mk-agent').with_name('check-mk-agent') }
+    end
+
+    context 'with custom package' do
+      let :params do
+        {
+            :package => 'custom-package',
+        }
+      end
+      it { should contain_class('check_mk::agent::install') }
+      it { should contain_package('xinetd') }
+      it { should contain_package('check_mk-agent').with_name('custom-package') }
+    end
+  end
+
+  context 'Unknown OS' do
+    context 'with default parameters' do
+      it { should contain_class('check_mk::agent::install') }
+      it { should contain_package('xinetd') }
+      it { should contain_package('check_mk-agent').with_name('check_mk-agent') }
+    end
+    context 'with custom package' do
+      let :params do
+        {
+            :package => 'custom-package',
+        }
+      end
+      it { should contain_class('check_mk::agent::install') }
+      it { should contain_package('xinetd') }
+      it { should contain_package('check_mk-agent').with_name('custom-package') }
+    end
+  end
 end

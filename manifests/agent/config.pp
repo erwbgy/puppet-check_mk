@@ -26,10 +26,10 @@
 #
 class check_mk::agent::config (
   $ip_whitelist = undef,
-  $port = undef,
-  $server_dir = undef,
-  $use_cache = undef,
-  $user = undef,
+  $port         = undef,
+  $server_dir   = undef,
+  $use_cache    = undef,
+  $user         = undef,
 ) {
   if $use_cache {
     $server = "${server_dir}/check_mk_caching_agent"
