@@ -1,6 +1,6 @@
 {
   "name": "gnubilafrance-check_mk",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "author": "Baptiste Grenier <bgrenier@gnubila.fr>",
   "license": "Apache-2.0",
   "summary": "Check_MK installation and configuration",
