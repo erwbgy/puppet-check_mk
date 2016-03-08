@@ -9,7 +9,9 @@ class check_mk::agent (
   $version      = undef,
   $workspace    = '/root/check_mk',
   $package      = undef,
+  $mrpe_checks  = {},
 ) {
+  validate_hash($mrpe_checks)
   include check_mk::agent::install
   include check_mk::agent::config
   include check_mk::agent::service
@@ -18,4 +20,5 @@ class check_mk::agent (
   @@check_mk::host { $::fqdn:
     host_tags => $host_tags,
   }
+  create_resources('check_mk::agent::mrpe', $mrpe_checks)
 }
