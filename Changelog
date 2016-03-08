@@ -1,3 +1,6 @@
+0.7.0:
+* Rework of check_mk::agent classes, contributed by gerhardsam.
+
 0.6.2:
 * Add rspec tests contributed by gerhardsam.
 
