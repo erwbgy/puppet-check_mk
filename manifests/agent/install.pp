@@ -1,9 +1,9 @@
 class check_mk::agent::install (
-  $version   = undef,
+  $version   = $check_mk::agent::version,
   $filestore = undef,
-  $workspace = undef,
+  $workspace = $check_mk::agent::workspace,
   $package   = undef,
-) {
+) inherits check_mk::agent {
   if ! defined(Package['xinetd']) {
     package { 'xinetd':
       ensure => present,

@@ -9,7 +9,15 @@ describe 'check_mk::agent::install', :type => :class do
     end
 
     context 'with default parameters' do
-      it { should contain_class('check_mk::agent::install') }
+      it { should contain_class('check_mk::agent::install').with(
+          {
+              :version   => nil,
+              :filestore => nil,
+              :workspace => '/root/check_mk',
+              :package   => nil,
+          }
+        )
+      }
       it { should contain_package('xinetd') }
       it { should contain_package('check_mk-agent').with_name('check-mk-agent') }
     end
