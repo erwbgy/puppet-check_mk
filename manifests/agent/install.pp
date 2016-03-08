@@ -1,15 +1,19 @@
 class check_mk::agent::install (
-  $version,
-  $filestore,
-  $workspace,
-  $package,
-) {
+  $version   = $check_mk::agent::version,
+  $filestore = undef,
+  $workspace = $check_mk::agent::workspace,
+  $package   = undef,
+) inherits check_mk::agent {
   if ! defined(Package['xinetd']) {
     package { 'xinetd':
       ensure => present,
     }
   }
   if $filestore {
+    if ! $version {
+      fail('version must be specified.')
+    }
+
     if ! defined(File[$workspace]) {
       file { $workspace:
         ensure => directory,

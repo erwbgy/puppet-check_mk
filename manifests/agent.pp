@@ -10,21 +10,11 @@ class check_mk::agent (
   $workspace    = '/root/check_mk',
   $package      = undef,
 ) {
-  class { 'check_mk::agent::install':
-    version   => $version,
-    filestore => $filestore,
-    workspace => $workspace,
-    package   => $package,
-  }
-  class { 'check_mk::agent::config':
-    ip_whitelist => $ip_whitelist,
-    port         => $port,
-    server_dir   => $server_dir,
-    use_cache    => $use_cache,
-    user         => $user,
-    require      => Class['check_mk::agent::install'],
-  }
+  include check_mk::agent::install
+  include check_mk::agent::config
   include check_mk::agent::service
+  Class['check_mk::agent::install'] ->
+  Class['check_mk::agent::config']
   @@check_mk::host { $::fqdn:
     host_tags => $host_tags,
   }
