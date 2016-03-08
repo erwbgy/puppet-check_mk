@@ -25,12 +25,12 @@
 #   Default: undef
 #
 class check_mk::agent::config (
-  $ip_whitelist = undef,
-  $port         = undef,
-  $server_dir   = undef,
-  $use_cache    = undef,
-  $user         = undef,
-) {
+  $ip_whitelist = $check_mk::agent::ip_whitelist,
+  $port         = $check_mk::agent::port,
+  $server_dir   = $check_mk::agent::server_dir,
+  $use_cache    = $check_mk::agent::use_cache,
+  $user         = $check_mk::agent::user,
+) inherits check_mk::agent {
   if $use_cache {
     $server = "${server_dir}/check_mk_caching_agent"
   } else {
