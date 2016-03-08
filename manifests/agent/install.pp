@@ -10,6 +10,10 @@ class check_mk::agent::install (
     }
   }
   if $filestore {
+    if ! $version {
+      fail('version must be specified.')
+    }
+
     if ! defined(File[$workspace]) {
       file { $workspace:
         ensure => directory,
