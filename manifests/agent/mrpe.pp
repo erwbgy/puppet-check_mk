@@ -20,7 +20,7 @@
 # * Bas Grolleman <bgrolleman@emendo-it.nl>
 #
 define check_mk::agent::mrpe (
-  $command
+  $command,
 ) {
   $mrpe_config_file = $::operatingsystem ? {
     centos  => '/etc/check-mk-agent/mrpe.cfg',
