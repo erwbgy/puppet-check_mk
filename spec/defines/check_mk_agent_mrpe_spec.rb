@@ -1,7 +1,7 @@
 require 'spec_helper'
 describe 'check_mk::agent::mrpe', :type => :define do
   let :title do
-    'mrpe'
+    'checkname'
   end
   context 'Unsupported OS' do
     context 'with mandatory command' do
@@ -23,11 +23,11 @@ describe 'check_mk::agent::mrpe', :type => :define do
       let :params do
         {:command => 'command'}
       end
-      it { should contain_check_mk__agent__mrpe('mrpe') }
+      it { should contain_check_mk__agent__mrpe('checkname') }
       it { should contain_concat('/etc/check-mk-agent/mrpe.cfg').with_ensure('present') }
-      it { should contain_concat__fragment('mrpe').with({
+      it { should contain_concat__fragment('checkname-mrpe-check').with({
             :target  => '/etc/check-mk-agent/mrpe.cfg',
-            :content => /^mrpe command\n$/,
+            :content => /^checkname command\n$/,
         })
       }
     end

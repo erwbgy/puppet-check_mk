@@ -31,10 +31,10 @@ define check_mk::agent::mrpe (
   if ( $mrpe_config_file ) {
     if ! defined(Concat[$mrpe_config_file]) {
       concat { $mrpe_config_file:
-        ensure => 'present';
+        ensure => 'present'
       }
     }
-    concat::fragment { $name:
+    concat::fragment { "${name}-mrpe-check":
       target  => $mrpe_config_file,
       content => "${name} ${command}\n"
     }
