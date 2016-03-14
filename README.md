@@ -123,6 +123,8 @@ Only required if a filestore is used.
 *workspace*: The directory to use to store files used during installation.
 Default: '/root/check_mk'
 
+*mrpe_checks*: Specifies a hash of check_mk::agent::mrpe resources to create. Default: {}
+
 ## Host groups and tags
 
 By default check_mk puts all hosts into a group called 'check_mk' but where you
