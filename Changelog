@@ -1,3 +1,6 @@
+0.7.1:
+* Add check_mk::agent::mrpe, code from Bas Grolleman contributed by gerhardsam.
+
 0.7.0:
 * Rework of check_mk::agent classes, contributed by gerhardsam.
 
