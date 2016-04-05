@@ -1,7 +1,7 @@
 class check_mk (
   $checkmk_service  = $check_mk::params::checkmk_service,
-  $filestore        = undef,
-  $host_groups      = undef,
+  $filestore        = $check_mk::params::filestore,
+  $host_groups      = $check_mk::params::host_groups,
   $httpd_service    = $check_mk::params::httpd_service,
   $package          = $check_mk::params::package,
   $site             = $check_mk::params::site,
