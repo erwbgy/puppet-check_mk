@@ -1,8 +1,14 @@
 class check_mk::params {
-  # general settings
-  $checkmk_service = 'omd'
 
-  # OS specific
+  # common variables
+  $checkmk_service = 'omd'
+  $package = 'omd-0.56'
+  $filestore = undef
+  $host_groups= undef
+  $site = 'monitoring'
+  $workspace = '/root/check_mk'
+
+  # OS specific variables
   case $::osfamily {
     'RedHat': {
       $httpd_service = 'httpd'

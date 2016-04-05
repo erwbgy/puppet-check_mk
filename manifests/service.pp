@@ -14,7 +14,7 @@ class check_mk::service (
       enable => true,
     }
   }
-  service { $service:
+  service { $checkmk_service:
     ensure => 'running',
     enable => true,
   }
