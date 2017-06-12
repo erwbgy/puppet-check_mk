@@ -1,10 +1,13 @@
 class check_mk (
-  $filestore   = undef,
-  $host_groups = undef,
-  $package     = 'omd-0.56',
-  $site        = 'monitoring',
-  $workspace   = '/root/check_mk',
-) {
+  $checkmk_service  = $check_mk::params::checkmk_service,
+  $filestore        = $check_mk::params::filestore,
+  $host_groups      = $check_mk::params::host_groups,
+  $httpd_service    = $check_mk::params::httpd_service,
+  $package          = $check_mk::params::package,
+  $site             = $check_mk::params::site,
+  $workspace        = $check_mk::params::workspace,
+) inherits check_mk::params {
+
   class { 'check_mk::install':
     filestore => $filestore,
     package   => $package,
@@ -17,6 +20,8 @@ class check_mk (
     require     => Class['check_mk::install'],
   }
   class { 'check_mk::service':
-    require   => Class['check_mk::config'],
+    checkmk_service => $checkmk_service,
+    httpd_service  => $httpd_service,
+    require        => Class['check_mk::config'],
   }
 }

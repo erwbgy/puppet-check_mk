@@ -8,22 +8,17 @@ class check_mk::agent (
   $user         = 'root',
   $version      = undef,
   $workspace    = '/root/check_mk',
+  $package      = undef,
+  $mrpe_checks  = {},
 ) {
-  class { 'check_mk::agent::install':
-    version   => $version,
-    filestore => $filestore,
-    workspace => $workspace,
-  }
-  class { 'check_mk::agent::config':
-    ip_whitelist => $ip_whitelist,
-    port         => $port,
-    server_dir   => $server_dir,
-    use_cache    => $use_cache,
-    user         => $user,
-    require      => Class['check_mk::agent::install'],
-  }
+  validate_hash($mrpe_checks)
+  include check_mk::agent::install
+  include check_mk::agent::config
   include check_mk::agent::service
+  Class['check_mk::agent::install'] ->
+  Class['check_mk::agent::config']
   @@check_mk::host { $::fqdn:
     host_tags => $host_tags,
   }
+  create_resources('check_mk::agent::mrpe', $mrpe_checks)
 }

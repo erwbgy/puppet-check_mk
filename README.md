@@ -3,6 +3,9 @@ I no longer use Puppet actively and this software has not been maintained for so
 
 # check_mk
 
+[![Puppet Forge](http://img.shields.io/puppetforge/v/gnubilafrance/check_mk.svg)](https://forge.puppetlabs.com/gnubilafrance/check_mk)
+[![Build Status](https://travis-ci.org/gnubila-france/puppet-check_mk.png?branch=master)](https://travis-ci.org/gnubila-france/puppet-check_mk)
+
 Puppet module for:
 
 * Installing and configuring the Open Monitoring Distribution (OMD) which
@@ -13,7 +16,7 @@ Puppet module for:
 Agent hostnames are automatically added to the server all_hosts configuration
 using stored configs.
 
-Currently only tested on Redhat-like systems.
+Original code by erwbgy, forked as upstream seems unmaintained.
 
 ## Server
 
@@ -75,7 +78,7 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
 ## Agent
 
-* Installs the check_mk-agent and check_mk-agent-logwatch packages
+* Installs the check_mk-agent package.
 
 * Configures the /etc/xinetd.d/check_mk configuration file
 
@@ -83,7 +86,7 @@ created making the URL http://hostname/acme/check_mk/ running as the 'acme' user
 
     include check_mk::agent
 
-Installs the check_mk and check_mk_logwatch packages from the system repository
+Installs the check_mk package from the system repository
 and configures /etc/xinetd.d/check_mk with no IP whitelist restrictions.
 
 ### Example 2
@@ -93,7 +96,7 @@ and configures /etc/xinetd.d/check_mk with no IP whitelist restrictions.
       ip_whitelist => [ '10.7.96.21', '10.7.96.22' ],
     }
 
-Installs the specified versions of the check_mk and check_mk_logwatch packages
+Installs the specified versions of the check_mk package
 after retrieving them from the Puppet file store.  Configures
 /etc/xinetd.d/check_mk so that only the specified IPs (and localhost/127.0.0.1)
 are allowed to connect.
@@ -122,6 +125,8 @@ Only required if a filestore is used.
 
 *workspace*: The directory to use to store files used during installation.
 Default: '/root/check_mk'
+
+*mrpe_checks*: Specifies a hash of check_mk::agent::mrpe resources to create. Default: {}
 
 ## Host groups and tags
 

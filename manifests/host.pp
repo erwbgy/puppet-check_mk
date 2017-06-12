@@ -1,5 +1,5 @@
 define check_mk::host (
-  $target,
+  $target = undef,
   $host_tags = [],
 ) {
   $host = $title

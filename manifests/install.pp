@@ -1,6 +1,6 @@
 class check_mk::install (
-  $filestore,
-  $package,
+  $filestore = undef,
+  $package = undef,
   $site,
   $workspace,
 ) {
