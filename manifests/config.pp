@@ -76,10 +76,10 @@ class check_mk::config (
     }
   }
   # local config is in /omd/sites/${site}/etc/check_mk/main.mk.local and is appended
-  concat::fragment { 'check_mk-local-config':
-    ensure => "${etc_dir}/check_mk/main.mk.local",
+  concat::fragment { 'all-hosts-static':
+    source => "${etc_dir}/check_mk/all_hosts_static",
     target => "${etc_dir}/check_mk/main.mk",
-    order  => 99,
+    order  => 18,
   }
   # re-read config if it changes
   exec { 'check_mk-refresh':
