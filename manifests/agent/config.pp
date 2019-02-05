@@ -17,13 +17,13 @@ class check_mk::agent::config (
   else {
     $only_from = undef
   }
-  file { '/etc/xinetd.d/check_mk':
+  file { '/etc/xinetd.d/check-mk-agent':
     ensure  => present,
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
     content => template('check_mk/agent/check_mk.erb'),
-    require => Package['check_mk-agent','check_mk-agent-logwatch'],
+    require => Package["${check_mk::agent::install::package_name}"],
     notify  => Class['check_mk::agent::service'],
   }
 }

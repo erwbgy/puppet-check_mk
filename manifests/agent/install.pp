@@ -1,7 +1,9 @@
 class check_mk::agent::install (
-  $version,
+  $version = "present",
   $filestore,
   $workspace,
+  $package_name = "check_mk-agent",
+  
 ) {
   if ! defined(Package['xinetd']) {
     package { 'xinetd':
@@ -14,40 +16,24 @@ class check_mk::agent::install (
         ensure => directory,
       }
     }
-    file { "${workspace}/check_mk-agent-${version}.noarch.rpm":
+    file { "${workspace}/check-mk-agent-${version}.noarch.rpm":
       ensure  => present,
-      source  => "${filestore}/check_mk-agent-${version}.noarch.rpm",
+      source  => "${filestore}/check-mk-agent-${version}.noarch.rpm",
       require => Package['xinetd'],
     }
-    file { "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm":
-      ensure  => present,
-      source  => "${filestore}/check_mk-agent-logwatch-${version}.noarch.rpm",
-      require => Package['xinetd'],
-    }
-    package { 'check_mk-agent':
+
+    package { "${package_name}":
       ensure   => present,
       provider => 'rpm',
-      source   => "${workspace}/check_mk-agent-${version}.noarch.rpm",
-      require  => File["${workspace}/check_mk-agent-${version}.noarch.rpm"],
+      source   => "${workspace}/${package_name}-${version}.noarch.rpm",
+      require  => File["${workspace}/${package_name}-${version}.noarch.rpm"],
     }
-    package { 'check_mk-agent-logwatch':
-      ensure   => present,
-      provider => 'rpm',
-      source   => "${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm",
-      require  => [
-        File["${workspace}/check_mk-agent-logwatch-${version}.noarch.rpm"],
-        Package['check_mk-agent'],
-      ],
-    }
+
   }
   else {
-    package { 'check_mk-agent':
-      ensure  => present,
+    package { "${package_name}":
+      ensure  => $version,
       require => Package['xinetd'],
-    }
-    package { 'check_mk-agent-logwatch':
-      ensure  => present,
-      require => Package['check_mk-agent'],
     }
   }
 }
