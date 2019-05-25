@@ -1,3 +1,4 @@
+
 class check_mk::config (
   $site,
   $host_groups = undef,
@@ -27,7 +28,7 @@ class check_mk::config (
   concat { "${etc_dir}/check_mk/main.mk":
     owner  => 'root',
     group  => 'root',
-    mode   => '0644',
+    mode   => 'u=rw,go=r',
     notify => Exec['check_mk-refresh'],
   }
   # all_hosts
@@ -47,9 +48,9 @@ class check_mk::config (
   }
   # local list of hosts is in /omd/sites/${site}/etc/check_mk/all_hosts_static and is appended
   concat::fragment { 'all-hosts-static':
-    ensure  => "${etc_dir}/check_mk/all_hosts_static",
-    target  => "${etc_dir}/check_mk/main.mk",
-    order   => 18,
+    source => "${etc_dir}/check_mk/all_hosts_static",
+    target => "${etc_dir}/check_mk/main.mk",
+    order  => 18,
   }
   # host_groups
   if $host_groups {
@@ -68,17 +69,23 @@ class check_mk::config (
     }
     $groups = keys($host_groups)
     check_mk::hostgroup { $groups:
-      dir         => "${etc_dir}/nagios/local/hostgroups",
-      hostgroups  => $host_groups,
-      target      => "${etc_dir}/check_mk/main.mk",
-      notify      => Exec['check_mk-refresh']
+      dir        => "${etc_dir}/nagios/local/hostgroups",
+      hostgroups => $host_groups,
+      target     => "${etc_dir}/check_mk/main.mk",
+      notify     => Exec['check_mk-refresh']
     }
   }
   # local config is in /omd/sites/${site}/etc/check_mk/main.mk.local and is appended
+  file { "${etc_dir}/check_mk/main.mk.local":
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => 'u=rw,go=r',
+  }
   concat::fragment { 'check_mk-local-config':
-    ensure  => "${etc_dir}/check_mk/main.mk.local",
-    target  => "${etc_dir}/check_mk/main.mk",
-    order   => 99,
+    source => "${etc_dir}/check_mk/main.mk.local",
+    target => "${etc_dir}/check_mk/main.mk",
+    order  => 99,
   }
   # re-read config if it changes
   exec { 'check_mk-refresh':
@@ -90,9 +97,11 @@ class check_mk::config (
     command     => "/bin/su -l -c '${bin_dir}/check_mk -O' ${site}",
     refreshonly => true,
   }
-  # re-read inventory at least daily
-  exec { 'check_mk-refresh-inventory-daily':
-    command  => "/bin/su -l -c '${bin_dir}/check_mk -O' ${site}",
-    schedule => 'daily',
+  # re-read inventory daily
+  cron { 'check_mk-refresh-inventory-daily':
+    user    => 'root',
+    command => "su -l -c '${bin_dir}/check_mk -O' ${site}",
+    minute  => 0,
+    hour    => 0,
   }
 }

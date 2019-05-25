@@ -1,0 +1,44 @@
+{
+  "name": "gnubilafrance-check_mk",
+  "version": "0.7.1",
+  "author": "Baptiste Grenier <bgrenier@gnubila.fr>",
+  "license": "Apache-2.0",
+  "summary": "Check_MK installation and configuration",
+
+  "source": "https://github.com/gnubila-france/puppet-check_mk",
+  "project_page": "https://github.com/gnubila-france/puppet-check_mk",
+  "issues_url": "https://github.com/gnubila-france/puppet-check_mk/issues",
+
+  "tags": [ "check_mk", "monitoring", "nagios" ],
+
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    }
+  ],
+
+  "dependencies": [
+    { "name": "puppetlabs/concat", "version_requirement": ">= 1.0.0 <5.0.0" },
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.3.0 <5.0.0" }
+  ]
+}
